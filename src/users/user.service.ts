@@ -5,6 +5,7 @@ import {
   CreateAccountInput,
   CreateAccountOutput,
 } from './dto/createAccount.dto';
+import { LoginInput, LoginOutput } from './dto/login.dto';
 import { User } from './entities/user.entity';
 
 @Injectable()
@@ -28,6 +29,23 @@ export class UserService {
       return { ok: true };
     } catch (error) {
       return { ok: false, error: '계정을 생성할수 없습니다' };
+    }
+  }
+
+  async login({ userId, password }: LoginInput): Promise<LoginOutput> {
+    try {
+      const user = await this.users.findOne({ userId });
+      if (!user) {
+        return { ok: false, error: '없는 아이디 입니다' };
+      }
+
+      const passwordOk = await user.checkPassword(password);
+      if (!passwordOk) {
+        return { ok: false, error: '비밀번호가 틀렸습니다' };
+      }
+      return { ok: true, token: '123123' };
+    } catch (error) {
+      return { ok: false, error: '로그인 할수 없습니다.' };
     }
   }
 }
