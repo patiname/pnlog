@@ -11,7 +11,7 @@ export class CoreEntity {
   @Field((type) => Number)
   @PrimaryGeneratedColumn()
   @IsNumber()
-  id: Number;
+  id: number;
 
   @Field((type) => Date)
   @CreateDateColumn()
