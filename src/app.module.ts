@@ -13,6 +13,7 @@ import * as Joi from 'joi';
 import { User } from './users/entities/user.entity';
 import { JwtModule } from './jwt/jwt.module';
 import { JwtMiddleware } from './jwt/jwt.middleware';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -52,6 +53,7 @@ import { JwtMiddleware } from './jwt/jwt.middleware';
     }),
     UsersModule,
     CommonModule,
+    AuthModule,
   ],
   controllers: [],
   providers: [],
