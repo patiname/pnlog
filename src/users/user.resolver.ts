@@ -7,6 +7,7 @@ import {
   CreateAccountOutput,
 } from './dto/createAccount.dto';
 import { LoginInput, LoginOutput } from './dto/login.dto';
+import { UserProfileInput, UserProfileOutput } from './dto/userProfile.dto';
 
 import { User } from './entities/user.entity';
 import { UserService } from './user.service';
@@ -32,5 +33,12 @@ export class UserResolver {
   @Mutation((returns) => LoginOutput)
   async login(@Args('input') loginInput: LoginInput): Promise<LoginOutput> {
     return this.userService.login(loginInput);
+  }
+
+  @Query((returns) => UserProfileOutput)
+  async userProfile(
+    @Args() userProfileInput: UserProfileInput,
+  ): Promise<UserProfileOutput> {
+    return this.userService.findById(userProfileInput.userNum);
   }
 }
