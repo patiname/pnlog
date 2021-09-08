@@ -6,6 +6,7 @@ import {
   CreateAccountInput,
   CreateAccountOutput,
 } from './dto/createAccount.dto';
+import { EditProfileInput, EditProfileOutput } from './dto/editProfile.dto';
 import { LoginInput, LoginOutput } from './dto/login.dto';
 import { UserProfileInput, UserProfileOutput } from './dto/userProfile.dto';
 
@@ -18,9 +19,8 @@ export class UserResolver {
 
   @Query((retruns) => User)
   @UseGuards(AuthGuard)
-  me(@AuthUser() authuser: User) {
-    // console.log(authuser);
-    return authuser;
+  me(@AuthUser() authUser: User) {
+    return authUser;
   }
 
   @Mutation((returns) => CreateAccountOutput)
@@ -40,5 +40,13 @@ export class UserResolver {
     @Args() userProfileInput: UserProfileInput,
   ): Promise<UserProfileOutput> {
     return this.userService.findById(userProfileInput.userNum);
+  }
+
+  @Mutation((returns) => EditProfileOutput)
+  async editProfile(
+    @AuthUser() authUser: User,
+    @Args('input') editProfileInput: EditProfileInput,
+  ): Promise<EditProfileOutput> {
+    return this.userService.editProfile(authUser.id, editProfileInput);
   }
 }

@@ -6,6 +6,7 @@ import {
   CreateAccountInput,
   CreateAccountOutput,
 } from './dto/createAccount.dto';
+import { EditProfileInput, EditProfileOutput } from './dto/editProfile.dto';
 import { LoginInput, LoginOutput } from './dto/login.dto';
 import { UserProfileOutput } from './dto/userProfile.dto';
 import { User } from './entities/user.entity';
@@ -59,15 +60,41 @@ export class UserService {
   async findById(id: number): Promise<UserProfileOutput> {
     try {
       const user = await this.users.findOne({ id });
+
       if (!user) {
         return { ok: false, error: '없는 유저 입니다.' };
       }
       return {
         ok: true,
-        user,
+        user: user,
       };
     } catch (error) {
       return { ok: false, error: '유저를 찾을수 없습니다.' };
+    }
+  }
+
+  async editProfile(
+    userId: number,
+    { userId: userName, password }: EditProfileInput,
+  ): Promise<EditProfileOutput> {
+    try {
+      const user = await this.users.findOne(userId);
+      if (!user) {
+        return { ok: false, error: '없는 유저 입니다' };
+      }
+
+      if (userName) {
+        user.userId = userName;
+      }
+
+      if (password) {
+        user.password = password;
+      }
+
+      await this.users.save(user);
+      return { ok: true };
+    } catch (error) {
+      return { ok: false, error: '수정할수 없습니다' };
     }
   }
 }
