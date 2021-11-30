@@ -14,13 +14,15 @@ import { User } from './users/entities/user.entity';
 import { JwtModule } from './jwt/jwt.module';
 import { JwtMiddleware } from './jwt/jwt.middleware';
 import { AuthModule } from './auth/auth.module';
+import { PhotoModule } from './photo/photo.module';
+import { Photo } from './photo/entities/photo.entity';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath:
-        process.env.NODE_ENV === 'dev' ? '.env.dev' : '.env:production',
+        process.env.NODE_ENV === 'dev' ? '.env.dev' : '.env.production',
       ignoreEnvFile: process.env.NODE_ENV === '.env.production',
       validationSchema: Joi.object({
         NODE_ENV: Joi.string().valid('dev', 'production').required(),
@@ -40,7 +42,7 @@ import { AuthModule } from './auth/auth.module';
       database: process.env.DB_NAME,
       synchronize: process.env.NODE_ENV !== '.env.production',
       logging: process.env.NODE_ENV !== '.env.production',
-      entities: [User],
+      entities: [User, Photo],
     }),
     GraphQLModule.forRoot({
       autoSchemaFile: true,
@@ -54,6 +56,7 @@ import { AuthModule } from './auth/auth.module';
     UsersModule,
     CommonModule,
     AuthModule,
+    PhotoModule,
   ],
   controllers: [],
   providers: [],
