@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreatePhotoInput, CreatePhotoOutput } from './dto/createPhoto.dto';
+import { DeletePhotoInput, DeletePhotoOutput } from './dto/deletePhoto.dto';
+import { EditPhotoInput, EditPhotoOutput } from './dto/editPhoto.dto';
 import { SeePhotoInput, SeePhotoOutput } from './dto/seePhoto.dto';
 import { Photo } from './entities/photo.entity';
 
@@ -42,6 +44,40 @@ export class PhotoService {
       };
     } catch (error) {
       return { ok: false, error: '사진을 불러올수 없습니다.' };
+    }
+  }
+
+  async editPhoto(editPhotoInput: EditPhotoInput): Promise<EditPhotoOutput> {
+    try {
+      const photo = await this.photos.findOne(editPhotoInput.photoId);
+      if (!photo) {
+        return { ok: false, error: '사진이 없습니다' };
+      }
+
+      await this.photos.save([
+        {
+          id: editPhotoInput.photoId,
+          ...editPhotoInput,
+        },
+      ]);
+
+      return { ok: true };
+    } catch (error) {
+      return { ok: false, error: '수정할수 없습니다.' };
+    }
+  }
+
+  async deletePhoto({ photoId }: DeletePhotoInput): Promise<DeletePhotoOutput> {
+    try {
+      const photo = await this.photos.findOne(photoId);
+      if (!photo) {
+        return { ok: false, error: '사진이 없습니다.' };
+      }
+
+      await this.photos.delete(photoId);
+      return { ok: true };
+    } catch (error) {
+      return { ok: false, error: '삭제 할 수 없습니다.' };
     }
   }
 }
