@@ -2,8 +2,10 @@ import { InternalServerErrorException } from '@nestjs/common';
 import { Field, InputType, ObjectType } from '@nestjs/graphql';
 import { IsString } from 'class-validator';
 import { CoreEntity } from 'src/common/entities/core.entity';
-import { BeforeInsert, BeforeUpdate, Column, Entity } from 'typeorm';
+import { BeforeInsert, BeforeUpdate, Column, Entity, OneToMany } from 'typeorm';
 import * as bcrypt from 'bcrypt';
+import { Photo } from 'src/photo/entities/photo.entity';
+import { PhotoComments } from 'src/photo/entities/photoComments.entity';
 
 @InputType('UserInputType', { isAbstract: true })
 @ObjectType()
@@ -18,6 +20,13 @@ export class User extends CoreEntity {
   @Column()
   @IsString()
   password: string;
+
+  @Field((type) => PhotoComments)
+  @OneToMany((type) => PhotoComments, (photoComments) => photoComments.user, {
+    nullable: true,
+    onDelete: 'CASCADE',
+  })
+  photoComment?: PhotoComments;
 
   @BeforeInsert()
   @BeforeUpdate()

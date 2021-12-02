@@ -16,6 +16,7 @@ import { JwtMiddleware } from './jwt/jwt.middleware';
 import { AuthModule } from './auth/auth.module';
 import { PhotoModule } from './photo/photo.module';
 import { Photo } from './photo/entities/photo.entity';
+import { PhotoComments } from './photo/entities/photoComments.entity';
 
 @Module({
   imports: [
@@ -42,7 +43,7 @@ import { Photo } from './photo/entities/photo.entity';
       database: process.env.DB_NAME,
       synchronize: process.env.NODE_ENV !== '.env.production',
       logging: process.env.NODE_ENV !== '.env.production',
-      entities: [User, Photo],
+      entities: [User, Photo, PhotoComments],
     }),
     GraphQLModule.forRoot({
       autoSchemaFile: true,
